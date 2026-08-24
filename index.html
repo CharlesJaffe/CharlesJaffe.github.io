@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coming Soon</title>
+<style>
+  @font-face {
+    font-family: 'system-serif';
+    src: local('Iowan Old Style'), local('Georgia');
+  }
+
+  :root {
+    --bark-dark: #1c140d;
+    --bark-mid: #4a3626;
+    --cream: #f2ead9;
+    --moss: #8a9a7e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    background: var(--bark-dark);
+  }
+
+  body {
+    font-family: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+    color: var(--cream);
+    overflow: hidden;
+  }
+
+  .scene {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('bark-web.jpg');
+    background-size: cover;
+    background-position: center;
+    animation: drift 40s ease-in-out infinite alternate;
+    filter: saturate(0.92) contrast(1.02);
+  }
+
+  @keyframes drift {
+    0%   { transform: scale(1.04) translate(0, 0); }
+    100% { transform: scale(1.14) translate(-1.5%, -1%); }
+  }
+
+  .veil {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(120% 90% at 50% 45%, rgba(15, 10, 6, 0.15) 0%, rgba(15, 10, 6, 0.55) 62%, rgba(10, 7, 4, 0.82) 100%);
+  }
+
+  .content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 0 1.5rem;
+    max-width: 40rem;
+  }
+
+  .eyebrow {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: var(--moss);
+    margin-bottom: 1.6rem;
+    opacity: 0;
+    animation: rise 1.4s ease-out 0.3s forwards;
+  }
+
+  h1 {
+    font-size: clamp(2.6rem, 7vw, 5rem);
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: 0.01em;
+    line-height: 1.05;
+    text-shadow: 0 2px 24px rgba(0,0,0,0.45);
+    opacity: 0;
+    animation: rise 1.4s ease-out 0.6s forwards;
+  }
+
+  .sub {
+    margin-top: 1.8rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-size: 0.95rem;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    color: rgba(242, 234, 217, 0.72);
+    opacity: 0;
+    animation: rise 1.4s ease-out 0.9s forwards;
+  }
+
+  .ring {
+    position: absolute;
+    bottom: 2.6rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(242, 234, 217, 0.45);
+    opacity: 0;
+    animation: rise 1.4s ease-out 1.3s forwards;
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bg { animation: none; transform: scale(1.04); }
+    .eyebrow, h1, .sub, .ring { animation: none; opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="scene">
+    <div class="bg"></div>
+    <div class="veil"></div>
+    <div class="content">
+      <div class="eyebrow">Rooted, not rushed</div>
+      <h1>Something is growing here.</h1>
+      <p class="sub">This site is still taking shape. Check back soon.</p>
+    </div>
+    <div class="ring">Coming Soon</div>
+  </div>
+</body>
+</html>
