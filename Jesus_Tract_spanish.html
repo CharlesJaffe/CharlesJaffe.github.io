@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Órbitas de forma congelada de configuraciones electrónicas en rotación, He–B</title>
+<link rel="alternate" hreflang="en" href="Jesus_Tract.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+
+/* Layout: one working column — controls strip, square orthographic canvas, constants table beneath. */
+:root{
+  --bg:#f6f7f8; --panel:#ffffff; --fg:#1b2027; --muted:#5d6672; --rule:#d9dde2;
+  --fill:#e3e6ea; --axis:#7d8794; --nuc:#1b2027; --accent:#2a5d8f;
+  --e1:#1f77b4; --e2:#d62728; --e3:#2ca02c; --e4:#e07b10; --e5:#8c5bc2; --edge:#9aa3ae;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#14171b; --panel:#1c2026; --fg:#e6e9ed; --muted:#9aa3ae; --rule:#2e343c;
+  --fill:#2c323a; --axis:#8a94a0; --nuc:#e6e9ed; --accent:#7fb0e0;
+  --e1:#5aa9e6; --e2:#f0625f; --e3:#5cc25c; --e4:#f5a347; --e5:#b393e0; --edge:#5d6672; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#14171b; --panel:#1c2026; --fg:#e6e9ed; --muted:#9aa3ae; --rule:#2e343c;
+  --fill:#2c323a; --axis:#8a94a0; --nuc:#e6e9ed; --accent:#7fb0e0;
+  --e1:#5aa9e6; --e2:#f0625f; --e3:#5cc25c; --e4:#f5a347; --e5:#b393e0; --edge:#5d6672; color-scheme:dark}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.5}
+.wrap{max-width:980px;margin:0 auto;padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:16px}
+h1{font-size:1.35rem;font-weight:600;margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:0;max-width:70ch}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:16px;align-items:start}
+@media (max-width:760px){.grid{grid-template-columns:minmax(0,1fr)}}
+.stage{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:8px;min-width:0}
+canvas{display:block;width:100%;aspect-ratio:1/1;max-width:100%;touch-action:none;cursor:grab}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.82rem;color:var(--muted);padding:6px 4px 2px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.controls{display:grid;gap:14px;background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:14px}
+fieldset{border:0;margin:0;padding:0;display:grid;gap:8px}
+legend{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:0;margin-bottom:4px}
+label{display:grid;grid-template-columns:84px 1fr 52px;align-items:center;gap:8px;font-size:.88rem}
+label output{font-family:var(--mono);font-size:.8rem;text-align:right;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.row{display:flex;flex-wrap:wrap;gap:6px}
+button,select{font:inherit;font-size:.85rem;color:var(--fg);background:var(--bg);border:1px solid var(--rule);border-radius:4px;padding:5px 10px;cursor:pointer}
+button[aria-pressed="true"]{background:var(--accent);color:var(--panel);border-color:var(--accent)}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+select{width:100%}
+.check{display:flex;align-items:center;gap:8px;font-size:.88rem;grid-template-columns:none}
+.nums{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px}
+.nums label{grid-template-columns:28px minmax(0,1fr)}
+.nums input{box-sizing:border-box;min-width:0;font-family:var(--mono);font-size:.85rem;width:100%;padding:4px 6px;border:1px solid var(--rule);border-radius:4px;background:var(--bg);color:var(--fg)}
+.tablewrap{overflow-x:auto;background:var(--panel);border:1px solid var(--rule);border-radius:6px}
+table{border-collapse:collapse;width:100%;font-size:.85rem;font-variant-numeric:tabular-nums}
+th,td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--rule);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{font-weight:600;color:var(--muted);font-size:.75rem;letter-spacing:.03em}
+td{font-family:var(--mono)}
+tr.sel td{color:var(--accent);font-weight:500}
+.note{font-size:.82rem;color:var(--muted);margin:0;max-width:80ch}
+.clock{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){canvas{cursor:default}}
+
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+.intro{display:grid;gap:8px}
+.intro h1{font-size:1.5rem}
+h2{font-size:1.2rem;font-weight:600;margin:0}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--rule);padding-bottom:10px}
+.tabs a{font-size:.92rem;text-decoration:none;color:var(--fg);border:1px solid var(--rule);border-radius:4px;padding:6px 12px;background:var(--panel)}
+.tabs a[aria-current="page"]{background:var(--accent);border-color:var(--accent);color:var(--panel)}
+.tabs a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tabs small{color:inherit;opacity:.75;margin-left:4px}
+.lang{margin:0;font-size:.88rem;color:var(--muted);justify-self:end}
+.lang a{color:var(--accent)}
+.lang a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="lang"><a id="langLink" href="Jesus_Tract.html" hreflang="en" lang="en">English</a> · <span aria-current="true">Español</span></p>
+  <header class="intro">
+    <h1>Configuraciones electrónicas en rotación de He, Li, Be y B: órbitas de forma congelada</h1>
+    <p class="sub">Átomos clásicos y no relativistas, con el núcleo en el origen (M = ∞). Cada configuración es una forma de los electrones que puede girar rígidamente alrededor de un eje: los anillos planos son configuraciones centrales (CC); las demás son configuraciones balanceadas (BC; Albouy y Chenciner, 1998). Cada animación mantiene fija la forma mientras esta gira alrededor del eje de rotación y su tamaño oscila. Para las configuraciones centrales se trata de una solución exacta: el movimiento homográfico de tipo kepleriano. En las configuraciones balanceadas la forma no puede permanecer fija mientras cambia el tamaño, de modo que el movimiento mostrado es la aproximación de forma congelada; para ellas solo la rotación rígida uniforme es exacta.</p>
+  </header>
+
+  <nav class="tabs" id="tabs" aria-label="Átomo"></nav>
+
+  <section>
+    <h2 id="atomTitle"></h2>
+    <p class="sub" id="atomSub"></p>
+  </section>
+
+  <div class="grid">
+    <div class="stage">
+      <canvas id="cv" width="800" height="800" aria-label="Vista ortográfica de los electrones y el núcleo"></canvas>
+      <div class="legend" id="legend"></div>
+      <div class="clock" id="clock"></div>
+    </div>
+
+    <div class="controls">
+      <fieldset>
+        <legend>Configuración</legend>
+        <select id="cfg"></select>
+      </fieldset>
+      <fieldset>
+        <legend>Vista</legend>
+        <div class="row">
+          <button id="pAxis" type="button">A lo largo del eje</button>
+          <button id="pSide" type="button">Lateral, en σh</button>
+          <button id="pObl" type="button">Oblicua</button>
+        </div>
+        <label for="az">Acimut <input id="az" type="range" min="-180" max="180" step="1" value="30"><output id="azO"></output></label>
+        <label for="el">Elevación <input id="el" type="range" min="-90" max="90" step="1" value="30"><output id="elO"></output></label>
+        <label for="zm">Ampliación <input id="zm" type="range" min="0.5" max="6" step="0.05" value="1"><output id="zmO"></output></label>
+        <p class="note">La elevación es el ángulo de la vista sobre σh: con ±90° se mira a lo largo del eje; con 0°, a lo largo de σh, con el eje horizontal. Arrastre sobre la imagen para girarla.</p>
+      </fieldset>
+      <fieldset>
+        <legend>Movimiento</legend>
+        <div class="row">
+          <button id="play" type="button" aria-pressed="true">Pausa</button>
+          <button id="corot" type="button" aria-pressed="false">Sistema corrotante</button>
+        </div>
+        <label for="sp">Velocidad <input id="sp" type="range" min="0.02" max="1" step="0.01" value="0.25"><output id="spO"></output></label>
+        <label class="check" for="trail"><input id="trail" type="checkbox" checked> Estelas</label>
+        <label class="check" for="rays"><input id="rays" type="checkbox" checked> Segmentos desde el núcleo</label>
+      </fieldset>
+      <fieldset>
+        <legend>Acciones (valores provisionales)</legend>
+        <div class="nums">
+          <label for="jr">J_r <input id="jr" type="number" min="0.05" step="0.5" value="0.5"></label>
+          <label for="ll">L <input id="ll" type="number" min="0.05" step="0.5" value="0.5"></label>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Configuración</th><th>C</th><th>a = I_eje/I</th><th>c</th><th>ω_φ/ω_r</th><th>ápside °/ciclo</th><th>δ/L</th><th>E(J_r, L)</th><th>e</th><th>ρ mín … máx</th></tr></thead>
+      <tbody id="tb"></tbody>
+    </table>
+  </div>
+  <p class="note" id="atomNote"></p>
+  <p class="note">Notación: ρ = √I es el tamaño (ponderado por la masa, respecto al centro de masas); a = I_eje/I (a = 1 para una configuración central); c = √I·|U|; C = a c²/2, de modo que la rotación rígida tiene E = −C/L² (hartree, L en unidades de ħ). El eje de rotación es x y σh es el plano especular perpendicular a él.</p>
+</div>
+
+<script>
+const ATOMS = {
+  helio: {name:"Helio", Z:2, NE:2,
+    sub:"Cada una de las dos configuraciones en rotación del helio, con la forma fija. El tamaño ρ = √I sigue el movimiento radial de H = p²/2 + L²/(2aρ²) − c/ρ mientras la forma gira alrededor del eje de rotación x. Proyección ortográfica, M = ∞. J_r y L son valores provisionales; las condiciones de cuantización siguen abiertas.",
+    note:"Formas de la Tarea 1 (<span style=\"font-family:var(--mono)\">data/refined</span>), normalizadas a I = 1. E = −c²/(2ν²), ν = J_r + L/√a; el movimiento radial se resuelve exactamente mediante la ecuación de Kepler en la anomalía excéntrica, ρ = A(1 − e cos η), A = ν²/c; acimut φ = f/√a, con f la anomalía verdadera. El triángulo es el doble círculo de Langmuir; el relleno gris es el triángulo formado por los dos electrones y el núcleo. Con un núcleo de ⁴He, la C del triángulo es 6.74815 en lugar de 6.75; la CC colineal no cambia, por simetría. Referencia: He ≈ −2.90372, He⁺ = −2 hartree.",
+    options:[["col", "Colineal e–N–e (CC), C = 12.25"], ["tri", "Triángulo de 60°, doble círculo (BC), C = 6.75"]],
+    names:{"col": "Colineal (CC)", "tri": "Triángulo (BC)"},
+    extraNotes:{"col": "", "tri": "par especular respecto a σh: 1 y 2"},
+    SHAPES:{
+  col: {"name":"Collinear (CC)","X":[[-0.0,0.0,0.7071067812],[-0.0,0.0,-0.7071067812]],"faces":[],"edges":null,"note":""},
+  tri: {"name":"Triangle (BC)","X":[[0.3535533906,0.0,0.6123724357],[-0.3535533906,0.0,0.6123724357]],"faces":[[0,1,2]],"edges":null,"note":"mirror pair across σh: 1 and 2"}
+}},
+  litio: {name:"Litio", Z:3, NE:3,
+    sub:"Cada una de las tres configuraciones en rotación del litio, con la forma fija. El tamaño ρ = √I sigue el movimiento radial de H = p²/2 + L²/(2aρ²) − c/ρ mientras la forma gira alrededor del eje de rotación x. Proyección ortográfica, M = ∞. J_r y L son valores provisionales; las condiciones de cuantización siguen abiertas.",
+    note:"Formas de la Tarea 1 (<span style=\"font-family:var(--mono)\">data/refined</span>), normalizadas a I = 1. E = −c²/(2ν²), ν = J_r + L/√a; el movimiento radial se resuelve exactamente mediante la ecuación de Kepler en la anomalía excéntrica, ρ = A(1 − e cos η), A = ν²/c; acimut φ = f/√a, con f la anomalía verdadera. Con un núcleo de ⁷Li, C cambia como máximo 2.3 × 10⁻⁴ (relativo). Referencia: Li ≈ −7.478, Li⁺ ≈ −7.280, Li²⁺ = −4.5 hartree.",
+    options:[["ring", "Anillo (CC), C = 79.23"], ["bc61", "BC, C = 61.04"], ["bc31", "BC, C = 31.55 (ladeada)"]],
+    names:{"ring": "Anillo (CC)", "bc61": "BC 61.04", "bc31": "BC 31.55"},
+    extraNotes:{"ring": "", "bc61": "los electrones 1 y 3 forman un par especular respecto a σh", "bc31": "los electrones 1 y 2 forman un par especular respecto a σh"},
+    SHAPES:{
+  ring: {name:"Ring (CC)", X:[[0.0,0.5773502692,0.0],[0.0,-0.2886751346,0.5],[0.0,-0.2886751346,-0.5]]},
+  bc61: {name:"BC 61.04", X:[[-0.2584776479,0.0,0.5218514653],[0.0,0.0,-0.5672042907],[0.2584776479,0.0,0.5218514653]]},
+  bc31: {name:"BC 31.55", X:[[0.4397199086,0.0,-0.4126011577],[-0.4397199086,0.0,-0.4126011577],[0.0,0.0,-0.5223153963]]}
+}},
+  berilio: {name:"Berilio", Z:4, NE:4,
+    sub:"Cada una de las cinco configuraciones en rotación del berilio, con la forma fija. El tamaño ρ = √I sigue el movimiento radial de H = p²/2 + L²/(2aρ²) − c/ρ mientras la forma gira alrededor del eje de rotación x. Proyección ortográfica, M = ∞. J_r y L son valores provisionales; las condiciones de cuantización siguen abiertas.",
+    note:"Formas de la Tarea 1 (<span style=\"font-family:var(--mono)\">data/refined</span>), normalizadas a I = 1. E = −c²/(2ν²), ν = J_r + L/√a; el movimiento radial se resuelve exactamente mediante la ecuación de Kepler en la anomalía excéntrica, ρ = A(1 − e cos η), A = ν²/c; acimut φ = f/√a, con f la anomalía verdadera. Con un núcleo de ⁹Be, C cambia como máximo 2.4 × 10⁻⁴ (relativo). Referencia: Be ≈ −14.667, Be⁺ ≈ −14.325, Be²⁺ ≈ −13.656, Be³⁺ = −8 hartree. El tetraedro regular es una configuración central que no puede rotar, por eso no aparece aquí; el tetraedro distorsionado es una configuración balanceada que sí rota.",
+    options:[["ring", "Anillo cuadrado (CC), C = 296.29"], ["tet", "Tetraedro distorsionado (BC), C = 258.52"], ["rect", "Rectángulo (BC), C = 218.71"], ["kite", "Deltoide (BC), C = 181.63"], ["pairs", "Dos pares de un mismo lado (BC), C = 94.86"]],
+    names:{"ring": "Anillo cuadrado (CC)", "tet": "Tetraedro distorsionado", "rect": "Rectángulo", "kite": "Deltoide", "pairs": "Dos pares de un mismo lado"},
+    extraNotes:{"ring": "", "tet": "los electrones 2 y 4 forman un par especular respecto a σh; 1 y 3 están en σh; las líneas grises son las aristas del tetraedro", "rect": "pares especulares respecto a σh: 1 y 2, 3 y 4", "kite": "los electrones 2 y 3 forman un par especular respecto a σh; 1 y 4 están en σh", "pairs": "pares especulares respecto a σh: 1 y 3, 2 y 4"},
+    SHAPES:{
+  ring: {name:"Square ring (CC)", X:[[-0.0,2e-10,0.5],[-0.0,-0.5,2e-10],[0.0,-2e-10,-0.5],[0.0,0.5,-2e-10]]},
+  tet: {name:"Distorted tetrahedron", X:[[0.0,6e-10,0.493678855],[0.2075849194,-0.3614197772,-0.2873420158],[0.0,0.4809715333,-0.1112887956],[-0.2075849194,-0.3614197772,-0.2873420158]]},
+  rect: {name:"Rectangle", X:[[0.2027400665,0.0,0.4570519286],[-0.2027400665,0.0,0.4570519286],[-0.2027400665,-0.0,-0.4570519286],[0.2027400665,-0.0,-0.4570519286]]},
+  kite: {name:"Kite", X:[[0.0,0.0,-0.4803642035],[-0.3539917194,-0.0,0.3869704067],[0.3539917194,-0.0,0.3869704067],[-0.0,-0.0,0.468121529]]},
+  pairs: {name:"Two pairs, one side", X:[[0.4678427994,-0.0,-0.2885810141],[-0.1456772406,-0.0,-0.4202645059],[-0.4678427994,-0.0,-0.2885810141],[0.1456772406,-0.0,-0.4202645059]]}
+}},
+  boro: {name:"Boro", Z:5, NE:5,
+    sub:"Cada una de las siete configuraciones en rotación del boro, con la forma fija. El tamaño ρ = √I sigue el movimiento radial de H = p²/2 + L²/(2aρ²) − c/ρ mientras la forma gira alrededor del eje de rotación x. Proyección ortográfica, M = ∞. J_r y L son valores provisionales; las condiciones de cuantización siguen abiertas.",
+    note:"Formas de la Tarea 1 (<span style=\"font-family:var(--mono)\">data/refined</span>), normalizadas a I = 1. E = −c²/(2ν²), ν = J_r + L/√a; el movimiento radial se resuelve exactamente mediante la ecuación de Kepler en la anomalía excéntrica, ρ = A(1 − e cos η), A = ν²/c; acimut φ = f/√a, con f la anomalía verdadera. Las formas no planas se dibujan con su envolvente convexa rellena de forma plana y sus aristas en gris. No se muestran los cambios por masa finita (¹¹B); para Li y Be son como máximo 2.4 × 10⁻⁴ en C. Referencia: B ≈ −24.654, B⁺ ≈ −24.349, B²⁺ ≈ −23.425, B³⁺ ≈ −22.031, B⁴⁺ = −12.5 hartree.",
+    options:[["ring", "Anillo pentagonal (CC), C = 820.66"], ["b761", "BC no plana, 1 par + 3 en σh, C = 760.95"], ["b693", "BC no plana, 2 pares + 1 en σh, C = 692.52"], ["b614", "BC no plana, 1 par + 3 en σh, C = 613.80"], ["b542", "BC plana, 2 pares + 1, C = 542.45"], ["b417", "BC plana, 2 pares + 1, C = 416.62"], ["b224", "BC plana, ladeada, C = 223.78"]],
+    names:{"ring": "Anillo pentagonal (CC)", "b761": "BC 760.95", "b693": "BC 692.52", "b614": "BC 613.80", "b542": "BC 542.45", "b417": "BC 416.62", "b224": "BC 223.78 (ladeada)"},
+    extraNotes:{"ring": "", "b761": "par especular respecto a σh: 1 y 3; los electrones 2, 4 y 5 están en σh; las líneas grises son las aristas de la envolvente convexa de los electrones", "b693": "pares especulares respecto a σh: 1 y 3, 4 y 5; el electrón 2 está en σh; las líneas grises son las aristas de la envolvente convexa de los electrones", "b614": "par especular respecto a σh: 1 y 4; los electrones 2, 3 y 5 están en σh; las líneas grises son las aristas de la envolvente convexa de los electrones", "b542": "pares especulares respecto a σh: 1 y 2, 3 y 4; el electrón 5 está en σh", "b417": "pares especulares respecto a σh: 1 y 2, 3 y 5; el electrón 4 está en σh", "b224": "pares especulares respecto a σh: 1 y 5, 3 y 4; el electrón 2 está en σh"},
+    SHAPES:{
+  ring: {"name":"Pentagon ring (CC)","X":[[0.0,-9e-10,-0.4472135955],[0.0,-0.2628655553,0.3618033994],[-0.0,0.4253254039,-0.138196602],[-0.0,-0.4253254045,-0.1381966002],[0.0,0.2628655568,0.3618033983]],"faces":[[4,2,0,3,1]],"edges":null,"note":""},
+  b761: {"name":"BC 760.95","X":[[-0.1762534335,1.2e-09,0.4184350436],[0.0,0.4359159226,-0.0765134093],[0.1762534335,1.2e-09,0.4184350436],[-0.0,-1.3e-09,-0.442650761],[0.0,-0.435915923,-0.0765134068]],"faces":[[4,2,0],[1,2,0],[3,4,0],[3,1,0],[3,4,2],[3,1,2]],"edges":[[0,1],[0,2],[0,3],[0,4],[1,2],[1,3],[2,3],[2,4],[3,4]],"note":"mirror pair across σh: 1 and 3; electrons 2, 4, 5 lie in σh; grey lines are the edges of the electrons' convex hull"},
+  b693: {"name":"BC 692.52","X":[[0.1718471569,1e-10,0.4149959688],[-0.0,-0.4093507551,-0.1594351327],[-0.1718471569,1e-10,0.4149959688],[-0.1718471569,0.2806881557,-0.3056727226],[0.1718471569,0.2806881557,-0.3056727226]],"faces":[[4,1,3],[4,1,0],[2,1,3],[2,1,0],[2,4,0],[2,4,3]],"edges":[[0,1],[0,2],[0,4],[1,2],[1,3],[1,4],[2,3],[3,4]],"note":"mirror pairs across σh: 1 and 3, 4 and 5; electron 2 lies in σh; grey lines are the edges of the electrons' convex hull"},
+  b614: {"name":"BC 613.80","X":[[-0.2991859164,5e-10,-0.3619584897],[0.0,0.316853765,0.2969863477],[0.0,-0.3168537658,0.2969863469],[0.2991859164,5e-10,-0.3619584897],[-0.0,6e-10,-0.4263253219]],"faces":[[1,2,0],[1,2,3],[4,2,0],[4,2,3],[4,1,0],[4,1,3]],"edges":[[0,1],[0,2],[0,4],[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]],"note":"mirror pair across σh: 1 and 4; electrons 2, 3, 5 lie in σh; grey lines are the edges of the electrons' convex hull"},
+  b542: {"name":"BC 542.45","X":[[0.2941896795,-0.0,-0.3604254538],[-0.2941896795,-0.0,-0.3604254538],[0.1659901788,0.0,0.4079388567],[-0.1659901788,0.0,0.4079388567],[-0.0,-0.0,-0.4232707751]],"faces":[[2,0,4,1,3]],"edges":null,"note":"mirror pairs across σh: 1 and 2, 3 and 4; electron 5 lies in σh"},
+  b417: {"name":"BC 416.62","X":[[0.396977163,-0.0,-0.2892737198],[-0.396977163,-0.0,-0.2892737198],[-0.1246374809,-0.0,-0.3941350692],[-0.0,0.0,0.4191727392],[0.1246374809,-0.0,-0.3941350692]],"faces":[[0,4,2,1,3]],"edges":null,"note":"mirror pairs across σh: 1 and 2, 3 and 5; electron 4 lies in σh"},
+  b224: {"name":"BC 223.78 (lopsided)","X":[[-0.4780327457,-0.0,-0.2022543334],[0.0,-0.0,-0.3735308415],[-0.2182556185,-0.0,-0.3364219358],[0.2182556185,-0.0,-0.3364219358],[0.4780327457,-0.0,-0.2022543334]],"faces":[[0,4,3,1,2]],"edges":null,"note":"mirror pairs across σh: 1 and 5, 3 and 4; electron 2 lies in σh"}
+}}
+};
+const ORDER = ["helio","litio","berilio","boro"];
+function faces(X){
+  const n = X.length, c = [0,1,2].map(k => X.reduce((s,p)=>s+p[k],0)/n);
+  const d = X.map(p => [p[0]-c[0], p[1]-c[1], p[2]-c[2]]);
+  const cr = (u,v) => [u[1]*v[2]-u[2]*v[1], u[2]*v[0]-u[0]*v[2], u[0]*v[1]-u[1]*v[0]];
+  let nrm = [0,0,0];
+  for(let i=0;i<n;i++) for(let j=i+1;j<n;j++){ const q = cr(d[i],d[j]); if(Math.hypot(...q) > Math.hypot(...nrm)) nrm = q; }
+  const len = Math.hypot(...nrm), un = nrm.map(v=>v/len);
+  const planar = d.every(p => Math.abs(p[0]*un[0]+p[1]*un[1]+p[2]*un[2]) < 1e-8);
+  if(planar){
+    const u = d.reduce((b,p)=> Math.hypot(...p) > Math.hypot(...b) ? p : b), ul = Math.hypot(...u), e1 = u.map(v=>v/ul), e2 = cr(un, e1);
+    const ang = p => Math.atan2(p[0]*e2[0]+p[1]*e2[1]+p[2]*e2[2], p[0]*e1[0]+p[1]*e1[1]+p[2]*e1[2]);
+    const order = [...Array(n).keys()].sort((i,j) => ang(d[i]) - ang(d[j]));
+    return {faces:[order], edges:null};
+  }
+  const F = [], Ed = [];
+  for(let i=0;i<n;i++) for(let j=i+1;j<n;j++){ Ed.push([i,j]); for(let k=j+1;k<n;k++) F.push([i,j,k]); }
+  return {faces:F, edges:Ed};
+}
+function consts(X, Z){
+  let Iax=0; for(const p of X) Iax += p[1]*p[1]+p[2]*p[2];
+  let U = 0;
+  for(const p of X) U -= Z/Math.hypot(p[0],p[1],p[2]);
+  for(let i=0;i<X.length;i++) for(let j=i+1;j<X.length;j++) U += 1/Math.hypot(X[i][0]-X[j][0],X[i][1]-X[j][1],X[i][2]-X[j][2]);
+  const a = Iax, c = Math.abs(U);              // I = 1
+  return {a, c, C: a*c*c/2};
+}
+for(const id of ORDER){
+  const A = ATOMS[id];
+  for(const k in A.SHAPES){
+    const S = A.SHAPES[k];
+    if(!S.faces) Object.assign(S, faces(S.X));
+    S.name = A.names[k]; S.note = A.extraNotes[k] || "";
+    Object.assign(S, consts(S.X, A.Z));
+  }
+}
+
+const $ = id => document.getElementById(id);
+const cv = $("cv"), ctx = cv.getContext("2d");
+let atom = "helio", SHAPES, Z, NE, key, t = 0, playing = true, corot = false, last = null, trails = [];
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const WORDS = ["","un","dos","tres","cuatro","cinco"];
+
+$("tabs").innerHTML = ORDER.map(id => `<a href="#${id}" data-id="${id}">${ATOMS[id].name}<small>${Object.keys(ATOMS[id].SHAPES).length}</small></a>`).join("");
+
+function selectAtom(id){
+  if(!ATOMS[id]) id = "helio";
+  atom = id; const A = ATOMS[id];
+  SHAPES = A.SHAPES; Z = A.Z; NE = A.NE; key = Object.keys(SHAPES)[0];
+  document.querySelectorAll("#tabs a").forEach(a => a.dataset.id === id ? a.setAttribute("aria-current","page") : a.removeAttribute("aria-current"));
+  $("atomTitle").textContent = `${A.name} (Z = ${A.Z}), forma congelada: rotación rígida más oscilación del tamaño`;
+  $("atomSub").textContent = A.sub;
+  $("atomNote").innerHTML = A.note;
+  $("cfg").innerHTML = A.options.map(([v,l]) => `<option value="${v}">${l}</option>`).join("");
+  $("cfg").value = key;
+  cv.setAttribute("aria-label", `Vista ortográfica de los ${WORDS[NE]} electrones y el núcleo`);
+  reset();
+}
+
+function orbit(){
+  const S = SHAPES[key], Jr = Math.max(0.05, +$("jr").value || 0.5), L = Math.max(0.05, +$("ll").value || 0.5);
+  const Lam = L/Math.sqrt(S.a), nu = Jr + Lam, e = Math.sqrt(Math.max(0, 1 - (Lam/nu)**2));
+  const A = nu*nu/S.c, Tr = 2*Math.PI*Math.pow(A,1.5)/Math.sqrt(S.c), E = -S.c*S.c/(2*nu*nu);
+  return {S, Jr, L, e, A, Tr, E, rmin:A*(1-e), rmax:A*(1+e)};
+}
+function state(o, tt){
+  const M = 2*Math.PI*tt/o.Tr, k = Math.floor(M/(2*Math.PI)), Mr = M - 2*Math.PI*k;
+  let eta = o.e < 0.8 ? Mr : Math.PI;
+  for(let i=0;i<50;i++){ const d = (eta - o.e*Math.sin(eta) - Mr)/(1 - o.e*Math.cos(eta)); eta -= d; if(Math.abs(d)<1e-14) break; }
+  const rho = o.A*(1 - o.e*Math.cos(eta));
+  const f = 2*Math.atan2(Math.sqrt(1+o.e)*Math.sin(eta/2), Math.sqrt(1-o.e)*Math.cos(eta/2)) + 2*Math.PI*k;
+  return {rho, phi: f/Math.sqrt(o.S.a)};
+}
+function pos(X, rho, phi){       // rotate about x by phi
+  const c = Math.cos(phi), s = Math.sin(phi);
+  return X.map(p => [rho*p[0], rho*(c*p[1]-s*p[2]), rho*(s*p[1]+c*p[2])]);
+}
+function basis(){
+  const az = +$("az").value*Math.PI/180, el = +$("el").value*Math.PI/180;
+  const ex = [Math.cos(el), -Math.sin(el)*Math.cos(az), -Math.sin(el)*Math.sin(az)];
+  const ey = [0, -Math.sin(az), Math.cos(az)];
+  return {ex, ey};
+}
+const dot = (u,v) => u[0]*v[0]+u[1]*v[1]+u[2]*v[2];
+function css(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+const clearTrails = () => { trails = Array.from({length:NE}, () => []); };
+
+function draw(){
+  const o = orbit(), st = state(o, t), B = basis();
+  const W = cv.width, H = cv.height, zoom = +$("zm").value;
+  const R = o.rmax*Math.max(...o.S.X.map(p=>Math.hypot(...p)));
+  const sc = 0.44*W/R*zoom, cx = W/2, cy = H/2;
+  const P = r => [cx + sc*dot(r,B.ex), cy - sc*dot(r,B.ey)];
+  const cols = Array.from({length:NE}, (_, i) => css("--e"+(i+1)));
+  ctx.fillStyle = css("--panel"); ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle = css("--axis"); ctx.lineWidth = 1.5; ctx.setLineDash([8,6]);
+  const a0 = P([-2*R,0,0]), a1 = P([2*R,0,0]);
+  ctx.beginPath(); ctx.moveTo(...a0); ctx.lineTo(...a1); ctx.stroke(); ctx.setLineDash([]);
+  if(Math.hypot(a1[0]-a0[0],a1[1]-a0[1]) > 40){ ctx.fillStyle = css("--muted"); ctx.font = "22px "+css("--sans"); ctx.fillText("eje de rotación x", Math.min(a1[0],W-210)-10, a1[1]-10 < 30 ? a1[1]+30 : a1[1]-10); }
+  const phi = corot ? 0 : st.phi;
+  const E3 = pos(o.S.X, st.rho, phi), E2 = E3.map(P), N = P([0,0,0]);
+  const V = [...E2, N];   // vertex list: electrons, then the nucleus
+  ctx.fillStyle = css("--fill");
+  for(const f of o.S.faces){ ctx.beginPath(); f.forEach((i,j) => j ? ctx.lineTo(...V[i]) : ctx.moveTo(...V[i])); ctx.closePath(); ctx.fill(); }
+  if(o.S.edges){ ctx.strokeStyle = css("--edge"); ctx.lineWidth = 1; for(const [i,j] of o.S.edges){ ctx.beginPath(); ctx.moveTo(...V[i]); ctx.lineTo(...V[j]); ctx.stroke(); } }
+  if($("trail").checked){
+    for(let i=0;i<E3.length;i++){
+      trails[i].push(E3[i]); if(trails[i].length > 1600) trails[i].shift();
+      ctx.strokeStyle = cols[i]; ctx.lineWidth = 1.4; ctx.beginPath();
+      trails[i].forEach((r,j) => { const q = P(r); j ? ctx.lineTo(...q) : ctx.moveTo(...q); }); ctx.stroke();
+    }
+  }
+  if($("rays").checked){
+    ctx.strokeStyle = css("--axis"); ctx.lineWidth = 1;
+    for(const q of E2){ ctx.beginPath(); ctx.moveTo(...N); ctx.lineTo(...q); ctx.stroke(); }
+  }
+  ctx.fillStyle = css("--nuc"); ctx.beginPath(); ctx.arc(...N, 9, 0, 2*Math.PI); ctx.fill();
+  E2.forEach((q,i) => { ctx.fillStyle = cols[i]; ctx.beginPath(); ctx.arc(...q, 8, 0, 2*Math.PI); ctx.fill(); });
+  $("clock").textContent = `t = ${(t/o.Tr).toFixed(2)} T_r   ρ = ${st.rho.toFixed(4)} bohr   φ = ${(st.phi*180/Math.PI % 360).toFixed(1)}°   ${corot ? "sistema corrotante (la forma gira con el sistema)" : "sistema de laboratorio"}`;
+}
+function table(){
+  const Jr = Math.max(0.05, +$("jr").value || 0.5), L = Math.max(0.05, +$("ll").value || 0.5);
+  $("tb").innerHTML = Object.entries(SHAPES).map(([k,S]) => {
+    const Lam = L/Math.sqrt(S.a), nu = Jr+Lam, e = Math.sqrt(Math.max(0,1-(Lam/nu)**2)), A = nu*nu/S.c, E = -S.c*S.c/(2*nu*nu);
+    return `<tr class="${k===key?'sel':''}"><td>${S.name}</td><td>${S.C.toFixed(4)}</td><td>${S.a.toFixed(6)}</td><td>${S.c.toFixed(4)}</td><td>${(1/Math.sqrt(S.a)).toFixed(5)}</td><td>${Math.abs(360*(1/Math.sqrt(S.a)-1)).toFixed(2)}</td><td>${(1-1/Math.sqrt(S.a)+0).toFixed(5).replace('-0.00000','0.00000')}</td><td>${E.toFixed(3)}</td><td>${e.toFixed(4)}</td><td>${(A*(1-e)).toFixed(4)} … ${(A*(1+e)).toFixed(4)}</td></tr>`;
+  }).join("");
+}
+function legend(){
+  const pair = SHAPES[key].note;
+  $("legend").innerHTML = Array.from({length:NE}, (_, k) => k+1).map(i=>`<span><i class="dot" style="background:var(--e${i})"></i>electrón ${i}</span>`).join("")
+    + `<span><i class="dot" style="background:var(--nuc)"></i>núcleo</span><span><i class="dot" style="background:var(--fill);border-radius:2px"></i>forma (relleno plano)</span>` + (pair?`<span>${pair}</span>`:"");
+}
+function reset(){ clearTrails(); t = 0; table(); legend(); draw(); }
+function outs(){ $("azO").textContent = $("az").value+"°"; $("elO").textContent = $("el").value+"°"; $("zmO").textContent = (+$("zm").value).toFixed(2)+"×"; $("spO").textContent = (+$("sp").value).toFixed(2); }
+function setView(az, el){ $("az").value = az; $("el").value = el; outs(); clearTrails(); draw(); }
+$("pAxis").onclick = () => setView(0, 90);
+$("pSide").onclick = () => setView(90, 0);
+$("pObl").onclick = () => setView(30, 30);
+$("cfg").onchange = e => { key = e.target.value; reset(); };
+["jr","ll"].forEach(id => $(id).addEventListener("input", reset));
+["az","el","zm","sp"].forEach(id => $(id).addEventListener("input", () => { outs(); draw(); }));
+$("trail").onchange = () => { clearTrails(); draw(); };
+$("rays").onchange = draw;
+$("play").onclick = () => {
+  if(reduce){ const o = orbit(); t += 0.05*o.Tr; draw(); $("play").textContent = "Paso"; return; }
+  playing = !playing; $("play").textContent = playing ? "Pausa" : "Reproducir"; $("play").setAttribute("aria-pressed", playing); last = null; };
+$("corot").onclick = () => { corot = !corot; $("corot").setAttribute("aria-pressed", corot); clearTrails(); draw(); };
+let drag = null;
+cv.addEventListener("pointerdown", e => { drag = {x:e.clientX, y:e.clientY, az:+$("az").value, el:+$("el").value}; cv.setPointerCapture(e.pointerId); });
+cv.addEventListener("pointermove", e => { if(!drag) return;
+  let az = drag.az + (e.clientX-drag.x)*0.5; az = ((az+180)%360+360)%360-180;
+  const el = Math.max(-90, Math.min(90, drag.el + (e.clientY-drag.y)*0.5));
+  $("az").value = Math.round(az); $("el").value = Math.round(el); outs(); draw(); });
+cv.addEventListener("pointerup", () => drag = null);
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", draw);
+new MutationObserver(draw).observe(document.documentElement, {attributes:true, attributeFilter:["data-theme"]});
+function loop(ts){
+  if(playing && !reduce && last !== null){ const o = orbit(); t += (ts-last)/1000 * +$("sp").value * o.Tr; draw(); }
+  last = ts; requestAnimationFrame(loop);
+}
+if(reduce){ playing = false; $("play").textContent = "Paso"; $("play").setAttribute("aria-pressed","false"); }
+window.addEventListener("hashchange", () => selectAtom(location.hash.slice(1)));
+const OTHER = {helio:"helium", litio:"lithium", berilio:"beryllium", boro:"boron"};
+function langHref(){ const l = $("langLink"); l.href = l.getAttribute("href").split("#")[0] + "#" + OTHER[atom]; }
+window.addEventListener("hashchange", langHref);
+outs(); selectAtom(location.hash.slice(1)); requestAnimationFrame(loop);
+langHref();
+</script>
+</body>
+</html>
